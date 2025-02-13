@@ -25,19 +25,30 @@ class BookService {
 
   static async getBooks(userId) {
     try {
-    return await Book.findAll({where:{createdBy:userId}});   
+      return await Book.findAll({
+        where: { createdBy: userId },
+        order: [["id", "ASC"]] // Order by 'id' in ascending order
+      });  
     } catch (error) {
         throw new Error(error.message)
     }    
   }
 
-  static async editBook(body,userId) {
+  static async getBook(id,userId) {
     try {
-    const bookExists = await Book.findOne({where:{id,createdBy:userId}});
+    return await Book.findOne({where:{createdBy:userId,id}});   
+    } catch (error) {
+        throw new Error(error.message)
+    }    
+  }
+
+  static async editBook(body,userId,updationRecordId) {
+    try {
+    const bookExists = await Book.findOne({where:{id:updationRecordId,createdBy:userId}});
     if(!bookExists){
       throw new Error("Book Not found or Invalid book updation request")
     }
-    await Book.update({ where: { id } },{...body});
+    await Book.update({ ...body }, { where: { id: updationRecordId } });
     return true       
     } catch (error) {
         throw new Error(error.message)

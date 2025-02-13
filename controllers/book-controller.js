@@ -2,7 +2,7 @@ const bookService = require("../services/book-service");
 
 const editBook = async (req, res) => {
   try {
-    const book = await bookService.editBook(req.body,req.user.id);
+    const book = await bookService.editBook(req.body,req.user.id,req.params.id);
     res.status(201).json({ message: "Book Updated Successfully", book });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -29,6 +29,16 @@ const addBook = async (req, res) => {
     }
   };
 
+  const getBook = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const book = await bookService.getBook(id,req.user.id);
+      res.status(201).json({ message: "Book fetched Successfully", book });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
+
   const getBooks = async (req, res) => {
     try {
       const book = await bookService.getBooks(req.user.id);
@@ -38,4 +48,4 @@ const addBook = async (req, res) => {
     }
   };
 
-module.exports = { addBook,editBook,deleteBook,getBooks };
+module.exports = { addBook,editBook,deleteBook,getBooks,getBook };
