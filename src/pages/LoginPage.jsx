@@ -11,6 +11,8 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   // Redirect user if login is successful
   useEffect(() => {
@@ -21,6 +23,10 @@ export default function LoginPage() {
   }, [token, navigate]);
 
   const handleLogin = () => {
+    setEmailError(!email);
+    setPasswordError(!password);
+    
+    if (!email || !password) return;
     dispatch(loginUser({ email, password }));
   };
 
@@ -44,22 +50,28 @@ export default function LoginPage() {
           {error && <Alert severity="error">{error}</Alert>}
 
           <TextField 
-            label="Email" 
+            label="Email *" 
             type="email" 
             fullWidth 
             variant="outlined" 
             margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+            error={emailError}
+            helperText={emailError ? "Email is required" : ""}
           />
           <TextField 
-            label="Password" 
+            label="Password *" 
             type="password" 
             fullWidth 
             variant="outlined" 
             margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            error={passwordError}
+            helperText={passwordError ? "Password is required" : ""}
           />
           <Button 
             variant="contained" 
@@ -71,16 +83,15 @@ export default function LoginPage() {
             {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
           </Button>
           <Typography sx={{ textAlign: "center", mt: 2 }}>
-  Don't have an account? 
-  <Link
-    component="button"
-    onClick={() => navigate("/register")}
-    sx={{ ml: 1, fontWeight: "bold", cursor: "pointer" }}
-  >
-    Register
-  </Link>
-</Typography>
-
+            Don't have an account? 
+            <Link
+              component="button"
+              onClick={() => navigate("/register")}
+              sx={{ ml: 1, fontWeight: "bold", cursor: "pointer" }}
+            >
+              Register
+            </Link>
+          </Typography>
         </Paper>
       </Box>
     </Box>

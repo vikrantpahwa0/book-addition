@@ -15,6 +15,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<LoginPage />} />
           <Route path="/book-form" element={<BookForm />} />
+          <Route path="/book-form/:id" element={<BookForm />} /> {/* Route for editing */}
           
         </Routes>
       </div>

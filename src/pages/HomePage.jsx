@@ -33,7 +33,7 @@ export default function HomePage() {
   }, [dispatch, token]);
 
   const handleEdit = (id) => {
-    navigate(`/edit-book/${id}`); // Navigate to edit page
+    navigate(`/book-form/${id}`); // Navigate to book form with the book ID
   };
 
   const handleDelete = (id) => {

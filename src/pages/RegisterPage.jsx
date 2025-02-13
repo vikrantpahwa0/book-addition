@@ -9,9 +9,13 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const { loading, error, user } = useSelector((state) => state.auth);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (user) {
@@ -19,8 +23,23 @@ export default function RegisterPage() {
     }
   }, [user, navigate]);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleRegister = () => {
-    dispatch(registerUser({ name, email, password }));
+    if (validateForm()) {
+      dispatch(registerUser(formData));
+    }
   };
 
   return (
@@ -42,36 +61,45 @@ export default function RegisterPage() {
 
           {error && <Alert severity="error">{error}</Alert>}
 
-          <TextField 
-            label="Name" 
-            type="text" 
-            fullWidth 
-            variant="outlined" 
+          <TextField
+            label="Name *"
+            type="text"
+            fullWidth
+            variant="outlined"
             margin="normal"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            error={!!errors.name}
+            helperText={errors.name}
           />
-          <TextField 
-            label="Email" 
-            type="email" 
-            fullWidth 
-            variant="outlined" 
+          <TextField
+            label="Email *"
+            type="email"
+            fullWidth
+            variant="outlined"
             margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
           />
-          <TextField 
-            label="Password" 
-            type="password" 
-            fullWidth 
-            variant="outlined" 
+          <TextField
+            label="Password *"
+            type="password"
+            fullWidth
+            variant="outlined"
             margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            error={!!errors.password}
+            helperText={errors.password}
           />
-          <Button 
-            variant="contained" 
-            fullWidth 
+          <Button
+            variant="contained"
+            fullWidth
             sx={{ mt: 2, backgroundColor: "#1976D2", "&:hover": { backgroundColor: "#1565C0" } }}
             onClick={handleRegister}
             disabled={loading}

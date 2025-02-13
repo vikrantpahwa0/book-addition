@@ -108,4 +108,34 @@ const initialUserState = {
         return state;
     }
   };
+
+  const initialUpdationState = {
+    books: [],
+    loading: false,
+    error: null,
+  };
+  
+  export const booksUpdationReducer = (state = initialUpdationState, action) => {
+    switch (action.type) {
+      case "FETCH_BOOKS_SUCCESS":
+        return { ...state, books: action.payload, loading: false };
+  
+      case "FETCH_BOOKS_FAILURE":
+        return { ...state, loading: false, error: action.payload };
+  
+      case "UPDATE_BOOK_SUCCESS":
+        return {
+          ...state,
+          books: state.books.map((book) =>
+            book.id === action.payload.id ? action.payload : book
+          ),
+        };
+  
+      case "UPDATE_BOOK_FAILURE":
+        return { ...state, error: action.payload };
+  
+      default:
+        return state;
+    }
+  };
   
