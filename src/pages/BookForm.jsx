@@ -1,0 +1,61 @@
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { addBook } from "../redux/actions";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  TextField,
+  Paper,
+} from "@mui/material";
+
+export default function BookForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.login.token) || localStorage.getItem("token");
+
+  const [formData, setFormData] = useState({ title: "", author: "", year: "" });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.title || !formData.author || !formData.year) {
+      alert("Please fill all fields");
+      return;
+    }
+    dispatch(addBook(formData, token));
+    navigate("/");
+  };
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", minHeight: "100vh", backgroundColor: "#f4f4f4", p: 3 }}>
+      <AppBar position="fixed" sx={{ width: "100%", backgroundColor: "#1976D2" }}>
+        <Toolbar sx={{ justifyContent: "center" }}>
+          <Typography variant="h6" noWrap sx={{ fontWeight: "bold" }}>
+            📚 Add a New Book
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+      <Paper sx={{ p: 3, mt: 5, maxWidth: 500, borderRadius: 2, boxShadow: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>Book Details</Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField margin="dense" label="Title" fullWidth name="title" value={formData.title} onChange={handleChange} />
+          <TextField margin="dense" label="Author" fullWidth name="author" value={formData.author} onChange={handleChange} />
+          <TextField margin="dense" label="Year" fullWidth name="year" value={formData.year} onChange={handleChange} />
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+          </Box>
+        </form>
+      </Paper>
+    </Box>
+  );
+}
